@@ -1,0 +1,34 @@
+#!/bin/bash
+
+DATA_FILE="/tmp/zipcodes/uszips.csv"
+
+# Auto-unzip if needed
+if [[ ! -f "$DATA_FILE" ]]; then
+    unzip -o /mnt/c/users/cjs01/Downloads/simplemaps_uszips_basicv1.94.zip uszips.csv -d /tmp/zipcodes 2>/dev/null
+fi
+
+if [[ ! -f "$DATA_FILE" ]]; then
+    echo "Error: Could not find data file"
+    exit 1
+fi
+
+# Build formatted list: "90210 - Beverly Hills, California"
+awk -F'"' '{print $2 " - " $8 ", " $12}' "$DATA_FILE" > /tmp/zipcodes_formatted.txt
+
+# Check if running in a terminal
+if [[ -t 1 ]]; then
+    # Interactive terminal - use fzf
+    if [[ $# -eq 1 ]]; then
+        fzf --query="$1" < /tmp/zipcodes_formatted.txt
+    else
+        fzf < /tmp/zipcodes_formatted.txt
+    fi
+else
+    # Not a terminal - just grep and show
+    if [[ $# -eq 1 ]]; then
+        grep -i "$1" /tmp/zipcodes_formatted.txt | head -20
+    else
+        echo "Usage: zc <search_term>"
+        echo "  Run in terminal for interactive fuzzy search"
+    fi
+fi
