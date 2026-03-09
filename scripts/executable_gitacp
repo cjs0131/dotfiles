@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Git add, commit, and push automation script
+
+# Check if we're in a git repository
+if ! git rev-parse --git-dir > /dev/null 2>&1; then
+    echo "Error: Not in a git repository"
+    exit 1
+fi
+
+# Prompt for commit message
+echo "Enter your commit message:"
+read -r commit_message
+
+# Check if commit message is empty
+if [ -z "$commit_message" ]; then
+    echo "Error: Commit message cannot be empty"
+    exit 1
+fi
+
+# Add all changes
+echo "Adding changes..."
+git add .
+
+# Commit with the provided message
+echo "Committing..."
+git commit -m "$commit_message"
+
+# Check if commit was successful
+if [ $? -ne 0 ]; then
+    echo "Error: Commit failed"
+    exit 1
+fi
+
+# Push to remote
+echo "Pushing to remote..."
+git push
+
+# Check if push was successful
+if [ $? -ne 0 ]; then
+    echo "Error: Push failed"
+    exit 1
+fi
+
+echo "Success! Changes have been added, committed, and pushed."

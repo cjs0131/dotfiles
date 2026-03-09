@@ -1,0 +1,17 @@
+#!/bin/bash
+# Extracts any common archive format
+FILE="$1"
+
+if [ -z "$FILE" ]; then
+    echo "Usage: extract <file>"
+    exit 1
+fi
+
+case "$FILE" in
+    *.tar.gz) tar -xzf "$FILE" ;;
+    *.tar.bz2) tar -xjf "$FILE" ;;
+    *.zip) unzip "$FILE" ;;
+    *.rar) unrar x "$FILE" ;;
+    *.7z) 7z x "$FILE" ;;
+    *) echo "Unsupported format" ;;
+esac
