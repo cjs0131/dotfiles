@@ -18,6 +18,6 @@ alias ....='cd ../..'
 alias fzf='fzf --preview="cat {}"'
 alias bat='batcat'
 alias chezpush='chezmoi cd && gitacp'
-
+starship init fish | source
 # opencode
 fish_add_path /home/charlie/.opencode/bin
