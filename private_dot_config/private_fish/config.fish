@@ -20,7 +20,10 @@ alias fzf='fzf --preview="cat {}"'
 alias bat='batcat'
 alias chezcd="chezmoi cd"
 alias chezedit='chezmoi edit'
+alias chedit='chezmoi edit'
+alias checd='chezmoi cd'
+alias chapply='chezmoi apply'
 starship init fish | source
-zoxide init fish | source
+zoxide init --cmd cd fish | source
 # opencode
 fish_add_path /home/charlie/.opencode/bin
