@@ -27,3 +27,5 @@ starship init fish | source
 zoxide init --cmd cd fish | source
 # opencode
 fish_add_path /home/charlie/.opencode/bin
+
+eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv fish)
