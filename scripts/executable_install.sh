@@ -7,7 +7,6 @@ PACKAGES=(
     "htop"
     "ranger"
     "starship"
-    "chezmoi"
     "zellij"
     "zoxide"
     "neovim"
