@@ -2,7 +2,12 @@ if status is-interactive
     # Commands to run in interactive sessions can go here
 end
 
-if command -q pacman
+if command -q paru
+    alias install='paru -S'
+    alias update='paru -Syu'
+    alias remove='paru -Rs'
+    alias search='paru -Ss'
+else if command -q pacman
     alias install='sudo pacman -S'
     alias update='sudo pacman -Syu'
     alias remove='sudo pacman -Rs'
