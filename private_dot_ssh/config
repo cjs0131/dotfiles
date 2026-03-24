@@ -1,0 +1,4 @@
+Host 357
+    HostName 100.72.181.118
+    User cjs
+    IdentityFile ~/.ssh/id_ed25519
