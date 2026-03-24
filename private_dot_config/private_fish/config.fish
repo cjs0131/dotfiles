@@ -29,7 +29,7 @@ if command -q batcat
     alias bat='batcat'
 end
 
-alias ssh357='ssh cjs@100.72.181.118'
+alias 357='cjs@100.72.181.118'
 alias ff='fastfetch'
 alias c='clear'
 alias ..='cd ..'
@@ -50,11 +50,10 @@ function _z_cd
     builtin cd $argv
     or return $status
     commandline -f repaint
-    if test "$_ZO_ECHO" = "1"
+    if test "$_ZO_ECHO" = 1
         echo $PWD
     end
 end
-
 
 # opencode
 fish_add_path /home/charlie/.opencode/bin
