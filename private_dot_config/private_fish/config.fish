@@ -45,6 +45,17 @@ alias chapply='chezmoi apply'
 starship init fish | source
 zoxide init --cmd cd fish | source
 
+# Patch _z_cd to use builtin cd, preventing infinite loop
+function _z_cd
+    builtin cd $argv
+    or return $status
+    commandline -f repaint
+    if test "$_ZO_ECHO" = "1"
+        echo $PWD
+    end
+end
+
+
 # opencode
 fish_add_path /home/charlie/.opencode/bin
 
