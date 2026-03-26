@@ -666,4 +666,4 @@ install_and_setup() {
     start_services
 }
 
-main_menu--
+main_menu
