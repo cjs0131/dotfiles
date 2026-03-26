@@ -12,7 +12,7 @@ BOLD='\033[1m'
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 DOCKER_DIR="$SCRIPT_DIR"
 
-# ---------------------------------------------------------------------
+# --------------------------------------------------------------------
 #  Helper functions
 # ----------------------------------------------------------------------
 print_header() {
@@ -132,6 +132,38 @@ select_services() {
     echo -e "\n${BOLD}Networking & Reverse Proxy:${NC}"
     echo ""
     toggle_service "Nginx Proxy Manager" "Reverse proxy with GUI" "INSTALL_NPM"
+
+    echo -e "\n${BOLD}AI:${NC}"
+    echo ""
+    toggle_service "Open WebUI" "Self-hosted ChatGPT-style UI for local/remote LLMs" "INSTALL_OPENWEBUI"
+    if [ "$INSTALL_OPENWEBUI" = "1" ]; then
+        echo ""
+        echo -e "  ${BOLD}Ollama setup:${NC}"
+        echo "    1) Install Ollama locally on this machine"
+        echo "    2) Connect to Ollama on a remote machine"
+        echo "    3) No Ollama (connect to OpenAI or other API manually)"
+        echo ""
+        read -p "  Choice [1/2/3]: " OLLAMA_CHOICE
+        case "$OLLAMA_CHOICE" in
+            1)
+                INSTALL_OLLAMA=1
+                OLLAMA_BASE_URL="http://ollama:11434"
+                ;;
+            2)
+                INSTALL_OLLAMA=0
+                read -p "  Enter remote Ollama URL (e.g. http://100.72.181.118:11434): " OLLAMA_BASE_URL
+                OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://localhost:11434}
+                ;;
+            3)
+                INSTALL_OLLAMA=0
+                OLLAMA_BASE_URL=""
+                ;;
+            *)
+                INSTALL_OLLAMA=0
+                OLLAMA_BASE_URL=""
+                ;;
+        esac
+    fi
 
     echo -e "\n${BOLD}Monitoring:${NC}"
     echo ""
@@ -392,6 +424,69 @@ EOF
 EOF
     fi
 
+    if [ "$INSTALL_OLLAMA" = "1" ]; then
+        print_status "Adding Ollama..."
+        check_port 11434 || true
+        cat >> "$DOCKER_DIR/docker-compose.yml" << 'EOF'
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./ollama:/root/.ollama
+    restart: unless-stopped
+EOF
+    fi
+
+    if [ "$INSTALL_OPENWEBUI" = "1" ]; then
+        print_status "Adding Open WebUI..."
+        check_port 3000 || true
+        # Build the compose block — depends_on only added if local Ollama is installed
+        if [ "$INSTALL_OLLAMA" = "1" ]; then
+            cat >> "$DOCKER_DIR/docker-compose.yml" << EOF
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    ports:
+      - "3000:8080"
+    environment:
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL}
+    volumes:
+      - ./open-webui:/app/backend/data
+    depends_on:
+      - ollama
+    restart: always
+EOF
+        elif [ -n "$OLLAMA_BASE_URL" ]; then
+            # Remote Ollama — no depends_on, just point at the remote URL
+            cat >> "$DOCKER_DIR/docker-compose.yml" << EOF
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    ports:
+      - "3000:8080"
+    environment:
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL}
+    volumes:
+      - ./open-webui:/app/backend/data
+    restart: always
+EOF
+        else
+            # No Ollama — plain Open WebUI, configure API via the UI
+            cat >> "$DOCKER_DIR/docker-compose.yml" << 'EOF'
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    ports:
+      - "3000:8080"
+    volumes:
+      - ./open-webui:/app/backend/data
+    restart: always
+EOF
+        fi
+    fi
+
     if [ "$INSTALL_UPTIME" = "1" ]; then
         print_status "Adding Uptime Kuma..."
         mkdir -p "$DOCKER_DIR/uptime/data"
@@ -433,6 +528,8 @@ start_services() {
     echo -e "${BOLD}Access your services at:${NC}"
     echo ""
 
+    [ "$INSTALL_OLLAMA" = "1" ] && echo -e "  ${GREEN}Ollama:${NC}      http://$IP:11434"
+    [ "$INSTALL_OPENWEBUI" = "1" ] && echo -e "  ${GREEN}Open WebUI:${NC}  http://$IP:3000"
     [ "$INSTALL_ADGUARD" = "1" ] && echo -e "  ${GREEN}AdGuard:${NC}      http://$IP:3080"
     [ "$INSTALL_JELLYFIN" = "1" ] && echo -e "  ${GREEN}Jellyfin:${NC}    http://$IP:8096"
     [ "$INSTALL_QBITTORRENT" = "1" ] && echo -e "  ${GREEN}qBittorrent:${NC} http://$IP:8081"
@@ -569,4 +666,4 @@ install_and_setup() {
     start_services
 }
 
-main_menu-
+main_menu--
