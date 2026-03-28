@@ -1,5 +1,5 @@
 layout {
-    cwd "/home/charlie"
+    cwd "/home/cjs"
     tab name="Dashboard" hide_floating_panes=true {
         pane size=1 borderless=true {
             plugin location="zellij:tab-bar"
@@ -35,8 +35,7 @@ layout {
         }
         pane split_direction="vertical" {
             pane size="50%"
-            pane command="/usr/bin/perl" focus=true size="50%" {
-                args "/usr/games/asciiquarium"
+            pane command="opencode" focus=true size="50%" {
                 start_suspended true
             }
         }
