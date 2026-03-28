@@ -157,6 +157,20 @@ install_zellij() {
   else
     echo "✗ zellij (all install methods failed)"
   fi
+
+  # Ensure zellij themes directory exists
+  mkdir -p "$HOME/.config/zellij/themes"
+
+  # Fix any hardcoded paths in existing config (e.g., /home/charlie -> current home)
+  if [[ -f "$HOME/.config/zellij/config.kdl" ]]; then
+    if grep -q "/home/charlie" "$HOME/.config/zellij/config.kdl" 2>/dev/null; then
+      echo "→ Fixing hardcoded paths in existing zellij config..."
+      sed -i "s|/home/charlie|$HOME|g" "$HOME/.config/zellij/config.kdl"
+    fi
+  fi
+  for layout in "$HOME/.config/zellij/layouts/"*.kdl 2>/dev/null; do
+    [[ -f "$layout" ]] && sed -i "s|/home/charlie|$HOME|g" "$layout"
+  done
 }
 
 # ── Lazygit (GitHub binary fallback) ─────────────────────────────────────────
@@ -248,7 +262,7 @@ echo ""
 echo "┌─────────────────────────────────────────────────────┐"
 echo "│            Select installation tier                 │"
 echo "├─────────────────────────────────────────────────────┤"
-echo "│  1) core    │ fish, btop, htop, neovim, fzf,       │"
+echo "│  1) core    │ fish, btop, htop, neovim, fzf,        │"
 echo "│             │ starship, zoxide                      │"
 echo "│             │                                       │"
 echo "│  2) full    │ core + fastfetch, ranger, zellij,     │"
