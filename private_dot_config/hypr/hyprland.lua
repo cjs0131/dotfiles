@@ -67,7 +67,9 @@ hl.config({
         allow_tearing    = false,
         layout           = "dwindle",
     },
+})
 
+hl.config({
     decoration = {
         rounding       = 5,
         rounding_power = 2,
@@ -86,25 +88,28 @@ hl.config({
             vibrancy = 0.1696,
         },
     },
+})
 
-    animations = {
-        enabled = true,
-    },
-
+hl.config({
     dwindle = {
-        pseudotile     = true,
         preserve_split = true,
     },
+})
 
+hl.config({
     master = {
         new_status = "master",
     },
+})
 
+hl.config({
     misc = {
         force_default_wallpaper = -1,
         disable_hyprland_logo   = false,
     },
+})
 
+hl.config({
     xwayland = {
         force_zero_scaling = true,
     },
@@ -186,8 +191,8 @@ hl.bind(mainMod .. " + O", hl.dsp.exec_cmd(terminal .. " -e opencode"))
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(terminal .. " -e ranger"))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))
-hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ action = "maximize" }))
-hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen({ action = "toggle" }))
+hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen(2))
+hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen(0))
 
 -- Move focus
 hl.bind(mainMod .. " + left",  hl.dsp.focus({ direction = "left" }))
