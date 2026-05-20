@@ -15,6 +15,7 @@ local fileManager = "kitty -e yazi"
 local menu = "hyprlauncher"
 local editor = "nvim"
 local browser = "firefox"
+local pbrowser = "firefox --private-window"
 local ipc = "qs -c noctalia-shell ipc call"
 
 -- Environment
@@ -182,6 +183,7 @@ hl.bind(mainMod .. " + L", hl.dsp.exec_cmd(terminal .. " -e vicinae open"))
 hl.bind(mainMod .. " + N", hl.dsp.exec_cmd(ipc .. " notifications toggleHistory"))
 hl.bind(mainMod .. " + X", hl.dsp.exec_cmd(ipc .. " sessionMenu toggle"))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser))
+hl.bind(mainMod .. "+ SHIFT + B", hl.dsp.exec_cmd(pbrowser))
 hl.bind(mainMod .. " + C", hl.dsp.exec_cmd("qs -c noctalia-shell ipc call plugin:screen-shot-and-record screenshot"))
 hl.bind(mainMod .. " + SHIFT + C", hl.dsp.exec_cmd("qs -c noctalia-shell ipc call plugin:screen-toolkit toggle"))
 hl.bind(
