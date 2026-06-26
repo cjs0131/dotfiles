@@ -1,5 +1,50 @@
 [user]
-	email = cjs0131@gmail.com
-	name = Charlie
+    name = Charlie ...
+    email = cjs0131@gmail.com
+
+[includeIf "gitdir:~/work/"]
+    path = ~/.gitconfig-work
+
 [init]
-	defaultBranch = main
+    defaultBranch = main
+
+[pull]
+    rebase = false
+
+[push]
+    default = simple
+    autoSetupRemote = true
+
+[fetch]
+    prune = true
+
+[rebase]
+    autoStash = true
+
+[merge]
+    conflictStyle = zdiff3
+
+[diff]
+    algorithm = histogram
+    colorMoved = default
+
+[core]
+    editor = code
+    pager = less -FRX
+
+[color]
+    ui = auto
+
+[help]
+    autocorrect = prompt
+
+[alias]
+    s = status -sb
+    co = checkout
+    br = branch
+    cm = commit -m
+    amend = commit --amend --no-edit
+    lg = log --graph --oneline --decorate --all
+    last = log -1 HEAD --stat
+    unstage = reset HEAD --
+    undo = reset --soft HEAD~1

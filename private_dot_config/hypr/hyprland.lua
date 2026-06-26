@@ -12,7 +12,7 @@ hl.monitor({
 -- User variables
 local terminal = "kitty"
 local fileManager = "kitty -e yazi"
-local menu = "hyprlauncher"
+local menu = "vicinae open"
 local editor = "nvim"
 local browser = "firefox"
 local pbrowser = "firefox --private-window"
@@ -179,7 +179,7 @@ local mainMod = "SUPER"
 
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 hl.bind(mainMod .. " + T", hl.dsp.exec_cmd(terminal))
-hl.bind(mainMod .. " + L", hl.dsp.exec_cmd(terminal .. " -e vicinae open"))
+hl.bind(mainMod .. " + L", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + N", hl.dsp.exec_cmd(ipc .. " notifications toggleHistory"))
 hl.bind(mainMod .. " + X", hl.dsp.exec_cmd(ipc .. " sessionMenu toggle"))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser))
