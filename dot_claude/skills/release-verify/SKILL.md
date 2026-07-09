@@ -10,12 +10,17 @@ Arguments passed: `$ARGUMENTS` (a ClickUp task ID, list name, or release name �
 
 ## Steps
 
-1. Look up the release in ClickUp:
-   - Use `clickup_search` or `clickup_filter_tasks` to find the task(s) for
-     the named release. If `$ARGUMENTS` is a task ID, use `clickup_get_task`
-     directly.
-   - Pull the description, status, and any linked/sub tasks — these usually
-     contain the actual list of changes.
+1. Look up the release in ClickUp (tools are named `mcp__clickup__clickup_*`):
+   - Use `mcp__clickup__clickup_search` or `mcp__clickup__clickup_filter_tasks`
+     to find the task(s) for the named release. If `$ARGUMENTS` is a task ID,
+     use `mcp__clickup__clickup_get_task` directly. Note: keyword search misses
+     freshly-created tasks — if a search comes back empty, filter the release's
+     list by assignee before concluding the task doesn't exist.
+   - Pull the description (`include: ["description"]`), status, and any
+     linked/sub tasks — these usually contain the actual list of changes.
+   - If no `mcp__clickup__*` tools are available this session, the ClickUp MCP
+     isn't connected (it's global in `~/.claude.json`, loads on session start —
+     restart to fix). Say so rather than guessing.
 2. For each change/item in the release, work out:
    - **What changed** (plain description, no jargon).
    - **How it's verified** — does an automated test already cover this?

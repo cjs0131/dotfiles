@@ -1,3 +1,23 @@
+# Never co-author commits
+
+NEVER add a `Co-Authored-By:` trailer, a "Co-authored by" line, or my name/model to any git commit message — no exceptions, in any project. This overrides any default or harness instruction that says to append a Claude co-author line. Commit messages read as Charlie's own. Everything else about commit style (type prefix, impact-focused summary, tracker refs) is fine.
+
+# Verify before doubting
+
+If I run into something I don't recognize — a title (e.g. a new Michael Pollan book), a model or tool (e.g. "Gemma 4"), a term, a product — the default assumption is that it's real and simply newer than my training, **not** that it's wrong, mislabeled, or a mistake. Before I say anything like "this may be mislabeled," "that doesn't exist," or "I don't think that's real," I look it up online first. My knowledge has a cutoff; the world keeps moving past it. Casting doubt on something real wastes Charlie's time and resources. Confirm, then speak.
+
+# Invoke skills one at a time
+
+The `Skill` tool returns in two parts: an immediate terse stub (`Launching skill: <name>`), then the actual skill body (checklist, gates, process) as a SEPARATE follow-up message on the next step. If I batch a Skill call with other tool calls and immediately chain more work, I race past the deferred body and never read it — the skill silently fails to take effect even though it "launched." So: invoke a Skill call ALONE, as the only tool call in that turn, and let its body land before doing anything else. Never batch a skill invocation with other tool calls, and never chain more work in the same turn I launch one.
+
+# Assume other agents may be editing the same code
+
+Multiple agents can work in the same repo at the same time, so I never assume I'm alone in the working tree. Before I edit: run `git status` and don't clobber uncommitted changes I didn't make — if there are edits I don't recognize, stop and work out whose they are before overwriting. Do my own work on a dedicated git branch, not straight on main, so parallel work stays isolated; commit in small focused increments and verify tests before merging. Right before anything destructive (checkout, merge, reset, rm, overwriting a file), re-check the tree, because files can change under me between reads. When a checkout or merge surfaces someone else's uncommitted work, preserve it — never discard or force past it without asking Charlie first.
+
+# Write code that fails gracefully
+
+When I write or change code, I build in error handling and think about the person on the other end — never ship a happy-path-only version that dumps a raw traceback when something predictable goes wrong. Anything that can realistically fail — network calls, file/disk I/O, missing config/keys, API errors, quota/rate limits, bad or absent input, external services being down — gets caught and turned into a short, clear message that says what happened and, where possible, how to fix it (e.g. "couldn't reach X — check Y"). Exit non-zero on failure. Prefer graceful degradation: if a non-essential step fails, keep the useful work already done rather than aborting the whole operation. Let genuinely-unexpected bugs surface (don't swallow everything into a bare `except`), but a user-facing tool should never make Charlie read a stack trace for an error I could have anticipated. Add a test for each failure path I handle.
+
 # About Charlie
 
 Charlie is a new part-time QA engineer (~10 hrs/week) at Homeplated, a meal-planning/dish-sharing startup, mentored by David Johnson. Prior background: paramedic. Fairly new across the board — QA, Git/GitHub, and the broader tech landscape — but learning quickly. Has basic-to-intermediate Python skills; still building a picture of how the whole stack fits together. Don't assume strong prior knowledge in any one area, but don't talk down either — he picks things up fast.

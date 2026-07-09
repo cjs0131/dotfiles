@@ -3,10 +3,10 @@
 
 -- Monitor
 hl.monitor({
-	output = "",
-	mode = "preferred",
-	position = "auto",
-	scale = 1.25,
+    output = "",
+    mode = "preferred",
+    position = "auto",
+    scale = 1.25,
 })
 
 -- User variables
@@ -15,6 +15,7 @@ local fileManager = "kitty -e yazi"
 local menu = "vicinae open"
 local editor = "nvim"
 local browser = "firefox"
+local ide = "zed"
 local pbrowser = "firefox --private-window"
 local ipc = "qs -c noctalia-shell ipc call"
 
@@ -24,96 +25,98 @@ hl.env("HYPRCURSOR_SIZE", "24")
 
 -- Autostart
 hl.on("hyprland.start", function()
-	hl.exec_cmd("qs -c noctalia-shell")
+    hl.exec_cmd("systemctl --user start hyprland-session.target")
+    hl.exec_cmd("qs -c noctalia-shell")
+    hl.exec_cmd("pgrep -x handy >/dev/null || /home/charlie/.local/share/applications/Handy_0.8.3_amd64.AppImage --start-hidden")
 end)
 
 -- Input
 hl.config({
-	input = {
-		kb_layout = "us",
-		kb_variant = "",
-		kb_model = "",
-		kb_options = "",
-		kb_rules = "",
-		follow_mouse = 1,
-		sensitivity = 0,
-		touchpad = {
-			natural_scroll = true,
-		},
-	},
+    input = {
+        kb_layout = "us",
+        kb_variant = "",
+        kb_model = "",
+        kb_options = "",
+        kb_rules = "",
+        follow_mouse = 1,
+        sensitivity = 0,
+        touchpad = {
+            natural_scroll = true,
+        },
+    },
 })
 
 hl.gesture({
-	fingers = 3,
-	direction = "horizontal",
-	action = "workspace",
+    fingers = 3,
+    direction = "horizontal",
+    action = "workspace",
 })
 
 hl.device({
-	name = "epic-mouse-v1",
-	sensitivity = -0.5,
+    name = "epic-mouse-v1",
+    sensitivity = -0.5,
 })
 
 -- Look and feel
 hl.config({
-	general = {
-		gaps_in = 2,
-		gaps_out = 5,
-		border_size = 2,
-		col = {
-			active_border = { colors = { "rgba(CB7CF7ff)", "rgba(F38BA8ff)" }, angle = 45 },
-			inactive_border = "rgba(595959aa)",
-		},
-		resize_on_border = true,
-		allow_tearing = false,
-		layout = "dwindle",
-	},
+    general = {
+        gaps_in = 2,
+        gaps_out = 5,
+        border_size = 2,
+        col = {
+            active_border = { colors = { "rgba(CB7CF7ff)", "rgba(F38BA8ff)" }, angle = 45 },
+            inactive_border = "rgba(595959aa)",
+        },
+        resize_on_border = true,
+        allow_tearing = false,
+        layout = "dwindle",
+    },
 })
 
 hl.config({
-	decoration = {
-		rounding = 5,
-		rounding_power = 2,
-		active_opacity = 1.0,
-		inactive_opacity = 1.0,
-		shadow = {
-			enabled = true,
-			range = 4,
-			render_power = 3,
-			color = 0xee1a1a1a,
-		},
-		blur = {
-			enabled = true,
-			size = 3,
-			passes = 1,
-			vibrancy = 0.1696,
-		},
-	},
+    decoration = {
+        rounding = 5,
+        rounding_power = 2,
+        active_opacity = 1.0,
+        inactive_opacity = 1.0,
+        shadow = {
+            enabled = true,
+            range = 4,
+            render_power = 3,
+            color = 0xee1a1a1a,
+        },
+        blur = {
+            enabled = true,
+            size = 3,
+            passes = 1,
+            vibrancy = 0.1696,
+        },
+    },
 })
 
 hl.config({
-	dwindle = {
-		preserve_split = true,
-	},
+    dwindle = {
+        preserve_split = true,
+    },
 })
 
 hl.config({
-	master = {
-		new_status = "master",
-	},
+    master = {
+        new_status = "slave",
+    },
 })
 
 hl.config({
-	misc = {
-		force_default_wallpaper = -1,
-		disable_hyprland_logo = false,
-	},
+    misc = {
+        force_default_wallpaper = -1,
+        disable_hyprland_logo = false,
+    },
 })
 
 hl.config({
-	xwayland = {
-		force_zero_scaling = true,
-	},
+    xwayland = {
+        force_zero_scaling = true,
+    },
 })
 
 -- Curves and animations
@@ -143,35 +146,35 @@ hl.animation({ leaf = "zoomFactor", enabled = true, speed = 7, bezier = "quick" 
 
 -- Window rules
 hl.window_rule({
-	name = "suppress-maximize-events",
-	match = { class = ".*" },
-	suppress_event = "maximize",
+    name = "suppress-maximize-events",
+    match = { class = ".*" },
+    suppress_event = "maximize",
 })
 
 hl.window_rule({
-	name = "fix-xwayland-drags",
-	match = {
-		class = "^$",
-		title = "^$",
-		xwayland = true,
-		float = true,
-		fullscreen = false,
-		pin = false,
-	},
-	no_focus = true,
+    name = "fix-xwayland-drags",
+    match = {
+        class = "^$",
+        title = "^$",
+        xwayland = true,
+        float = true,
+        fullscreen = false,
+        pin = false,
+    },
+    no_focus = true,
 })
 
 hl.window_rule({
-	name = "move-hyprland-run",
-	match = { class = "hyprland-run" },
-	move = "20 monitor_h-120",
-	float = true,
+    name = "move-hyprland-run",
+    match = { class = "hyprland-run" },
+    move = "20 monitor_h-120",
+    float = true,
 })
 
 hl.layer_rule({
-	name = "noctalia-region-selector-noanim",
-	match = { namespace = "noctalia-shell:regionSelector" },
-	no_anim = true,
+    name = "noctalia-region-selector-noanim",
+    match = { namespace = "noctalia-shell:regionSelector" },
+    no_anim = true,
 })
 
 -- Keybinds
@@ -180,20 +183,24 @@ local mainMod = "SUPER"
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 hl.bind(mainMod .. " + T", hl.dsp.exec_cmd(terminal))
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd(menu))
+hl.bind(mainMod .. " + Z", hl.dsp.exec_cmd(ide))
 hl.bind(mainMod .. " + N", hl.dsp.exec_cmd(ipc .. " notifications toggleHistory"))
 hl.bind(mainMod .. " + X", hl.dsp.exec_cmd(ipc .. " sessionMenu toggle"))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser))
 hl.bind(mainMod .. "+ SHIFT + B", hl.dsp.exec_cmd(pbrowser))
-hl.bind(mainMod .. " + C", hl.dsp.exec_cmd("qs -c noctalia-shell ipc call plugin:screen-shot-and-record screenshot"))
-hl.bind(mainMod .. " + SHIFT + C", hl.dsp.exec_cmd("qs -c noctalia-shell ipc call plugin:screen-toolkit toggle"))
+hl.bind(mainMod .. " + C", hl.dsp.exec_cmd("qs -c noctalia-shell ipc call plugin:screen-toolkit annotate")) -- region screenshot -> annotate/save
+hl.bind(mainMod .. " + SHIFT + C", hl.dsp.exec_cmd("qs -c noctalia-shell ipc call plugin:screen-toolkit toggle")) -- open full screen toolkit
+-- Super+Shift+R toggles recording: if wl-screenrec/wf-recorder is running, stop; else start a region mp4
+hl.bind(mainMod .. " + SHIFT + R", hl.dsp.exec_cmd("bash -c 'if pgrep -x wl-screenrec >/dev/null || pgrep -x wf-recorder >/dev/null; then qs -c noctalia-shell ipc call plugin:screen-toolkit recordStop; else qs -c noctalia-shell ipc call plugin:screen-toolkit recordMp4; fi'"))
 hl.bind(
-	mainMod .. " + M",
-	hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch exit")
+    mainMod .. " + M",
+    hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch exit")
 )
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + O", hl.dsp.exec_cmd(terminal .. " -e opencode"))
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(terminal .. " -e ranger"))
+hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("/home/charlie/.local/share/applications/Handy_0.8.3_amd64.AppImage --toggle-transcription")) -- Handy dictation: tap to start, tap to stop
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen(2))
@@ -213,9 +220,9 @@ hl.bind(mainMod .. " + SHIFT + down", hl.dsp.window.move({ direction = "down" })
 
 -- Switch workspaces / move window to workspace
 for i = 1, 10 do
-	local key = i % 10
-	hl.bind(mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }))
-	hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }))
+    local key = i % 10
+    hl.bind(mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }))
+    hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }))
 end
 
 -- Scratchpad
@@ -232,24 +239,24 @@ hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
 -- Volume and brightness
 hl.bind(
-	"XF86AudioRaiseVolume",
-	hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"),
-	{ locked = true, repeating = true }
+    "XF86AudioRaiseVolume",
+    hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"),
+    { locked = true, repeating = true }
 )
 hl.bind(
-	"XF86AudioLowerVolume",
-	hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),
-	{ locked = true, repeating = true }
+    "XF86AudioLowerVolume",
+    hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),
+    { locked = true, repeating = true }
 )
 hl.bind(
-	"XF86AudioMute",
-	hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"),
-	{ locked = true, repeating = true }
+    "XF86AudioMute",
+    hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"),
+    { locked = true, repeating = true }
 )
 hl.bind(
-	"XF86AudioMicMute",
-	hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"),
-	{ locked = true, repeating = true }
+    "XF86AudioMicMute",
+    hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"),
+    { locked = true, repeating = true }
 )
 hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%+"), { locked = true, repeating = true })
 hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%-"), { locked = true, repeating = true })
@@ -259,3 +266,31 @@ hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), { locked = true })
 hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true })
+
+hl.bind("SUPER + tab", function()
+    local layouts     = {"dwindle", "master"}
+    local workspace   = hl.get_active_workspace()
+    if hl.get_active_special_workspace() then
+        workspace = hl.get_active_special_workspace()
+    end
+
+    local next_layout = "dwindle"
+
+    if not workspace then
+        return
+    end
+
+    for i = 1, #layouts do
+        if layouts[i] == workspace.tiled_layout then
+            local next_layout_idx = (i % #layouts) + 1
+            next_layout = layouts[next_layout_idx]
+            break
+        end
+    end
+
+    if workspace.special then
+        hl.workspace_rule({ workspace = tostring(workspace.name), layout = next_layout })
+    else
+        hl.workspace_rule({ workspace = tostring(workspace.id), layout = next_layout })
+    end
+end)
