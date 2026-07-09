@@ -28,6 +28,7 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("systemctl --user start hyprland-session.target")
     hl.exec_cmd("qs -c noctalia-shell")
     hl.exec_cmd("pgrep -x handy >/dev/null || /home/charlie/.local/share/applications/Handy_0.8.3_amd64.AppImage --start-hidden")
+    hl.exec_cmd("pgrep -x kdeconnectd >/dev/null || /usr/bin/kdeconnectd")
 end)
 
 -- Input
