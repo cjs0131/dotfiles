@@ -30,7 +30,7 @@ hl.env("HYPRCURSOR_SIZE", "24")
 hl.on("hyprland.start", function()
     hl.exec_cmd("systemctl --user start hyprland-session.target")
     hl.exec_cmd("qs -c noctalia-shell")
-    hl.exec_cmd("pgrep -x handy >/dev/null || /home/charlie/.local/share/applications/Handy_0.8.3_amd64.AppImage --start-hidden")
+    hl.exec_cmd("pgrep -x handy >/dev/null || /home/charlie/.local/share/applications/Handy_0.9.4_amd64.AppImage --start-hidden")
     hl.exec_cmd("pgrep -x kdeconnectd >/dev/null || /usr/bin/kdeconnectd")
 end)
 
@@ -233,7 +233,7 @@ hl.bind(mainMod .. " + O", hl.dsp.exec_cmd(obsidian)) -- Obsidian
 hl.bind(mainMod .. " + SHIFT + O", hl.dsp.exec_cmd(opencode)) -- opencode (moved off Super+O)
 hl.bind(mainMod .. " + A", hl.dsp.exec_cmd(agentterm)) -- agent terminal -> Agents room (WS 2)
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(terminal .. " -e ranger"))
-hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("/home/charlie/.local/share/applications/Handy_0.8.3_amd64.AppImage --toggle-transcription")) -- Handy dictation: tap to start, tap to stop
+hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("/home/charlie/.local/share/applications/Handy_0.9.4_amd64.AppImage --toggle-transcription")) -- Handy dictation: tap to start, tap to stop
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen(2))
