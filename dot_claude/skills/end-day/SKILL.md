@@ -47,7 +47,31 @@ the reason ("D1 verified in the log → its task looks done"). **Suggest only; m
 no changes.** Same connection guard as `/start-work`: if the MCP isn't connected,
 say so plainly rather than skipping silently, and continue from the log alone.
 
-## Stage 5 — Seed tomorrow
+## Stage 5 — Purge Playwright artifacts (look before you nuke)
+
+Manual walks and test runs leave disposable artifacts that pile up on disk — all
+gitignored, so purely local cruft: `.playwright-mcp/` (page snapshots `.yml`,
+console `.log`, screenshots), `test-results/`, `playwright-report/`. Clear them at
+end of day, but **scan before deleting** — don't nuke blind.
+
+1. **Sanity-scan `.playwright-mcp/` first.** List what's there and skim for
+   anything that looks worth keeping before it's gone — a screenshot or snapshot
+   tied to a bug not yet filed, an `error-context.md` from a failure not yet
+   written up, evidence for an in-progress verify. If something looks helpful,
+   surface it to Charlie (and offer to move it into `.playwright-mcp/evidence/`)
+   **before** purging. This look-first step is the point of the stage.
+2. **Spare `.playwright-mcp/evidence/`** — that's the intentional named-screenshot
+   store; never delete it here.
+3. **Then purge the rest**, from the repo root (`/home/charlie/work/hp-app-core-react`):
+   ```bash
+   find .playwright-mcp -mindepth 1 -maxdepth 1 ! -name evidence -exec rm -rf {} +
+   rm -rf test-results playwright-report e2e/test-results e2e/playwright-report
+   ```
+   Gotcha: a Docker WebKit run leaves `test-results/` **root-owned** — if `rm`
+   fails with permission denied, use `sudo rm -rf` (passwordless sudo is enabled).
+4. Skip the stage cleanly if the dirs don't exist or Charlie isn't in the e2e repo.
+
+## Stage 6 — Seed tomorrow
 
 Finish by writing the handoff into today's worklog so `/start-work` Stage 0 reads
 it clean tomorrow:
