@@ -183,15 +183,28 @@ append to it, don't clobber it.
 **The Plan items are Charlie's personal work layer — write them so they surface
 on his Obsidian dashboard.** He runs an Obsidian tasks module (the Work section of
 [[dashboard]], driven by the Tasks plugin — see `obsidian-task-system-setup.md`).
-It shows anything tagged `#work`. So write each Plan checkbox as a `#work` task
-with today's date, e.g. `- [ ] #work Verify 2026-07-09-D1 — changes 1–3 📅 today`
-(use the real `YYYY-MM-DD`), adding `⏫`/`🔼` for priority where it helps.
+It shows anything tagged `#work`.
+
+**Use the dataview field syntax, never the emoji syntax.** This vault sets the
+Tasks plugin's Task Format to `dataview`, so metadata is written as inline
+fields, not emoji. Charlie doesn't want emoji anywhere in the vault.
+
+| Field | Write |
+|-------|-------|
+| Due date | `[due:: 2026-07-09]` (real `YYYY-MM-DD`, not the word "today") |
+| Priority | `[priority:: high]` · `medium` · `low` |
+| Recurring | `[repeat:: every week]` |
+| Completed | `[completion:: 2026-07-09]` |
+
+So write each Plan checkbox as a `#work` task with today's date, e.g.
+`- [ ] #work Verify 2026-07-09-D1 — changes 1–3 [due:: 2026-07-09]`, adding
+`[priority:: high]` or `[priority:: medium]` where it helps.
 
 **If a task has a matching playbook, link it right in the task line** as a
 `[[wikilink]]` to the playbook's note name — the Tasks plugin renders it clickable
 on the dashboard, so Charlie jumps straight there instead of hunting. Put the link
-in the description, before the date/priority emoji:
-`- [ ] #work Finish Verify 2026-07-07-D1 — [[2026-07-07-verify-D1-playbook]] 📅 today ⏫`.
+in the description, before the inline fields:
+`- [ ] #work Finish Verify 2026-07-07-D1 — [[2026-07-07-verify-D1-playbook]] [due:: 2026-07-07] [priority:: high]`.
 Applies to any task with a playbook (release verifies, the Playwright onboarding,
 anything you built in Stage 4).
 
@@ -211,8 +224,8 @@ Suggested shape — keep it plain, not a template:
 # Worklog — 2026-07-09
 
 ## Plan
-- [ ] #work Verify release D1 (playbook ready) 📅 2026-07-09 ⏫
-- [ ] #work Upgrade Claude to Max 5X, forward invoice to David 📅 2026-07-09
+- [ ] #work Verify release D1 (playbook ready) [due:: 2026-07-09] [priority:: high]
+- [ ] #work Upgrade Claude to Max 5X, forward invoice to David [due:: 2026-07-09]
 
 ## Done
 _(fill in as the day goes)_
