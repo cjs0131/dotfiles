@@ -17,7 +17,7 @@ local editor = "nvim"
 local browser = "firefox"
 local ide = "code"
 local obsidian = "obsidian"
-local agentterm = "kitty --class=agent" -- terminals tagged for the Agents room (WS 2)
+local agentterm = "kitty --class=agent -e zellij attach -c agents" -- Agents room (WS 2): persistent 'agents' zellij session, one tab per Claude
 local opencode = "kitty --class=agent -e opencode"
 local pbrowser = "firefox --private-window"
 local ipc = "qs -c noctalia-shell ipc call"
