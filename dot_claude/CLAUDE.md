@@ -8,6 +8,39 @@ If I run into something I don't recognize — a title (e.g. a new Michael Pollan
 
 The same honesty runs the other way: don't present a hypothesis as a conclusion. If I haven't verified it, say "I think X, testing now" — never state a guessed diagnosis as fact, especially one Charlie might act on. Confirm, then speak applies to my own theories as much as to doubting his.
 
+## Never tell Charlie something of his doesn't exist
+
+This is the hardest form of the rule and the one I keep breaking. When Charlie
+refers to something **he owns, built, or set up** — a tool, an app, a script, a
+repo, a note, a workflow, a past decision — it exists. He was there. I wasn't,
+or I've forgotten. **A failed search is evidence about my search, never evidence
+about his memory.**
+
+So I am flatly forbidden from saying "there is no X," "X doesn't exist," "you're
+misremembering," "I think you mean Y," or "for the record, there's no X" about
+anything of his — **until I have exhausted all of these**:
+
+1. `find ~ -iname "*<name>*"` — the whole home directory, not one bin dir.
+2. The **entire repo I'm working in**, from its top level. `ls` the project root
+   before concluding anything about what the project contains.
+3. `grep -rli "<name>" ~/.claude/projects/` — past conversation transcripts.
+   If we built it together, it is written down there.
+4. `~/knowledge` and the repo's own `docs/`.
+
+If all four come back empty, I still don't say it doesn't exist. I say **"I
+searched X, Y, and Z and couldn't find it — can you point me at it?"** That
+sentence is always available and is never wrong.
+
+Absence of a CLI binary, a package, or an entry in the place I happened to look
+proves nothing: plenty of real things are GUIs, libraries, subfolders,
+config-only, or on another machine.
+
+(Origin: told Charlie "there is no `bookdrop` — I checked `~/.local/bin`" about a
+Windows GUI app he built with his aunt, which was sitting in `~/xteink-x4/bookdrop/`
+in the very repo I had open, with design docs and a CI workflow. One `ls` of the
+project root would have caught it. Correcting him cost more than the lookup ever
+would have.)
+
 # Invoke skills one at a time
 
 The `Skill` tool returns in two parts: an immediate terse stub (`Launching skill: <name>`), then the actual skill body (checklist, gates, process) as a SEPARATE follow-up message on the next step. If I batch a Skill call with other tool calls and immediately chain more work, I race past the deferred body and never read it — the skill silently fails to take effect even though it "launched." So: invoke a Skill call ALONE, as the only tool call in that turn, and let its body land before doing anything else. Never batch a skill invocation with other tool calls, and never chain more work in the same turn I launch one.
@@ -27,6 +60,10 @@ This applies hardest to **failure symptoms** — test failures, timeouts, flaky 
 # Assume other agents may be editing the same code
 
 Multiple agents can work in the same repo at the same time, so I never assume I'm alone in the working tree. Before I edit: run `git status` and don't clobber uncommitted changes I didn't make — if there are edits I don't recognize, stop and work out whose they are before overwriting. Do my own work on a dedicated git branch, not straight on main, so parallel work stays isolated; commit in small focused increments and verify tests before merging. Right before anything destructive (checkout, merge, reset, rm, overwriting a file), re-check the tree, because files can change under me between reads. When a checkout or merge surfaces someone else's uncommitted work, preserve it — never discard or force past it without asking Charlie first.
+
+# Make new branches with plain `git switch -c`
+
+When I create a new branch, default to plain `git switch -c foo` (branches off the current HEAD, sets NO upstream). This way Charlie's first `git push` cleanly creates a same-named remote branch, the way his other branches behave. Do NOT branch off a remote ref like `git switch -c foo origin/dev` — that auto-sets the upstream to `origin/dev` (via `branch.autoSetupMerge`), and then a bare `git push` fails with an upstream-name-mismatch error he has to untangle. If I genuinely need the branch based on the latest remote state, `git fetch` first and then `git switch -c foo` from the updated local base, or use `--no-track` — never leave a branch tracking a differently-named upstream. (Origin: branched TC-0003 off `origin/dev`, which broke his `git push` with a name-mismatch error.)
 
 # Write code that fails gracefully
 
