@@ -1,6 +1,6 @@
 layout {
     cwd "/home/charlie"
-    tab name="Tab #1" focus=true hide_floating_panes=true {
+    tab name="system" hide_floating_panes=true {
         pane size=1 borderless=true {
             plugin location="zellij:tab-bar"
         }
@@ -18,7 +18,7 @@ layout {
             plugin location="zellij:status-bar"
         }
     }
-    tab name="Tab #2" hide_floating_panes=true {
+    tab name="scratch" hide_floating_panes=true {
         pane size=1 borderless=true {
             plugin location="zellij:tab-bar"
         }
@@ -29,6 +29,15 @@ layout {
                 start_suspended true
             }
         }
+        pane size=1 borderless=true {
+            plugin location="zellij:status-bar"
+        }
+    }
+    tab name="agents" focus=true hide_floating_panes=true {
+        pane size=1 borderless=true {
+            plugin location="zellij:tab-bar"
+        }
+        pane
         pane size=1 borderless=true {
             plugin location="zellij:status-bar"
         }
