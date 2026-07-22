@@ -17,7 +17,8 @@ local editor = "nvim"
 local browser = "firefox"
 local ide = "code"
 local obsidian = "obsidian"
-local opencode = "kitty -e opencode"
+local agentterm = "kitty --class=agent" -- terminals tagged for the Agents room (WS 2)
+local opencode = "kitty --class=agent -e opencode"
 local pbrowser = "firefox --private-window"
 local ipc = "qs -c noctalia-shell ipc call"
 
@@ -174,6 +175,33 @@ hl.window_rule({
     float = true,
 })
 
+-- Workspace "rooms": pin apps to a home workspace so windows stop piling up
+-- wherever focus happens to be. See the room map in ~/knowledge (hyprland-workspace-rooms).
+-- WS 1 QA cockpit (VS Code + work Chrome) | WS 2 Agents | WS 3 Notes | WS 4 Personal web
+-- NOTE: the editor (VS Code) and generic terminals are intentionally NOT pinned.
+-- They're portable tools — they open in your current workspace so you can code in
+-- ~/projects from a personal room without being yanked into the QA cockpit.
+hl.window_rule({
+    name = "room-work-chrome",
+    match = { class = "^[Gg]oogle-chrome$" },
+    workspace = "1",
+})
+hl.window_rule({
+    name = "room-agents",
+    match = { class = "^agent$" },
+    workspace = "2",
+})
+hl.window_rule({
+    name = "room-obsidian",
+    match = { class = "^obsidian$" },
+    workspace = "3",
+})
+hl.window_rule({
+    name = "room-personal-firefox",
+    match = { class = "^firefox$" },
+    workspace = "4",
+})
+
 hl.layer_rule({
     name = "noctalia-region-selector-noanim",
     match = { namespace = "noctalia-shell:regionSelector" },
@@ -203,6 +231,7 @@ hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + O", hl.dsp.exec_cmd(obsidian)) -- Obsidian
 hl.bind(mainMod .. " + SHIFT + O", hl.dsp.exec_cmd(opencode)) -- opencode (moved off Super+O)
+hl.bind(mainMod .. " + A", hl.dsp.exec_cmd(agentterm)) -- agent terminal -> Agents room (WS 2)
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(terminal .. " -e ranger"))
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("/home/charlie/.local/share/applications/Handy_0.8.3_amd64.AppImage --toggle-transcription")) -- Handy dictation: tap to start, tap to stop
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
