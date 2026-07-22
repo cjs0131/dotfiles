@@ -15,7 +15,9 @@ local fileManager = "kitty -e yazi"
 local menu = "vicinae open"
 local editor = "nvim"
 local browser = "firefox"
-local ide = "zed"
+local ide = "code"
+local obsidian = "obsidian"
+local opencode = "kitty -e opencode"
 local pbrowser = "firefox --private-window"
 local ipc = "qs -c noctalia-shell ipc call"
 
@@ -184,7 +186,7 @@ local mainMod = "SUPER"
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 hl.bind(mainMod .. " + T", hl.dsp.exec_cmd(terminal))
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd(menu))
-hl.bind(mainMod .. " + Z", hl.dsp.exec_cmd(ide))
+hl.bind(mainMod .. " + I", hl.dsp.exec_cmd(ide)) -- VS Code
 hl.bind(mainMod .. " + N", hl.dsp.exec_cmd(ipc .. " notifications toggleHistory"))
 hl.bind(mainMod .. " + X", hl.dsp.exec_cmd(ipc .. " sessionMenu toggle"))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser))
@@ -199,7 +201,8 @@ hl.bind(
 )
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
-hl.bind(mainMod .. " + O", hl.dsp.exec_cmd(terminal .. " -e opencode"))
+hl.bind(mainMod .. " + O", hl.dsp.exec_cmd(obsidian)) -- Obsidian
+hl.bind(mainMod .. " + SHIFT + O", hl.dsp.exec_cmd(opencode)) -- opencode (moved off Super+O)
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(terminal .. " -e ranger"))
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("/home/charlie/.local/share/applications/Handy_0.8.3_amd64.AppImage --toggle-transcription")) -- Handy dictation: tap to start, tap to stop
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
@@ -267,6 +270,63 @@ hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), { locked = true })
 hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true })
+
+-- Tablet mode: kill the internal keyboard + touchpad so the folded-back keys
+-- can't register presses; restore them when flipping back to laptop mode.
+-- The tablet-mode switch lives on the "HP WMI hotkeys" device (hyprctl devices).
+local tabletModeDevices = { "at-translated-set-2-keyboard", "elan012a:00-04f3:32ed-touchpad" }
+-- Temporary debug logging while we chase the stuck-disabled bug
+local function tabletLog(msg)
+    local f = io.open(os.getenv("HOME") .. "/hypr-tablet-debug.log", "a")
+    if f then
+        f:write(os.date("%H:%M:%S") .. " " .. msg .. "\n")
+        f:close()
+    end
+end
+-- The fold event actually fires on "Intel HID switches" (verified with evdev
+-- capture); "HP WMI hotkeys" advertises the same switch but stays silent.
+-- Bind both anyway — the callbacks are idempotent.
+local tabletSwitches = { "Intel HID switches", "HP WMI hotkeys" }
+for _, sw in ipairs(tabletSwitches) do
+    hl.bind("switch:on:" .. sw, function()
+        tabletLog("switch:on (" .. sw .. ") fired -> disabling")
+        for _, dev in ipairs(tabletModeDevices) do
+            hl.device({ name = dev, enabled = false })
+        end
+        tabletLog("switch:on done")
+    end, { locked = true })
+    hl.bind("switch:off:" .. sw, function()
+        tabletLog("switch:off (" .. sw .. ") fired -> enabling")
+        for _, dev in ipairs(tabletModeDevices) do
+            hl.device({ name = dev, enabled = true })
+        end
+        tabletLog("switch:off done")
+    end, { locked = true })
+end
+
+-- Manual version of the above for tent mode (~270°), where the hardware switch
+-- hasn't fired yet: Super+K kills the internal keyboard + touchpad before flipping.
+-- The disabled keyboard can't press Super+K again, so to re-enable either fold
+-- fully flat and back (trips the switch:off bind above), press Super+K on an
+-- external/Bluetooth keyboard, or run `hyprctl reload` from the touchscreen.
+local tabletModeManual = false
+hl.bind("SUPER + K", function()
+    tabletModeManual = not tabletModeManual
+    tabletLog("Super+K fired -> manual=" .. tostring(tabletModeManual))
+    for _, dev in ipairs(tabletModeDevices) do
+        hl.device({ name = dev, enabled = not tabletModeManual })
+    end
+    if tabletModeManual then
+        -- Built-in safety net: while we trust-build this, auto-restore the
+        -- devices 2 minutes after a manual disable so a missed switch event
+        -- can never strand the keyboard.
+        os.execute("nohup sh -c 'sleep 120; "
+            .. "hyprctl eval \"hl.device({ name = \\\"at-translated-set-2-keyboard\\\", enabled = true })\"; "
+            .. "hyprctl eval \"hl.device({ name = \\\"elan012a:00-04f3:32ed-touchpad\\\", enabled = true })\"; "
+            .. "echo \"$(date +%H:%M:%S) built-in safety net fired\" >> \"$HOME/hypr-tablet-debug.log\"' >/dev/null 2>&1 &")
+    end
+    tabletLog("Super+K done")
+end, { locked = true })
 
 hl.bind("SUPER + tab", function()
     local layouts     = {"dwindle", "master"}
